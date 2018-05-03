@@ -128,6 +128,21 @@ namespace lab9_studentinfo_wclass_az
             }
         }
 
+        // method to request user Y or N for an additional student profile.
+        static bool MoreProfilesAsker()
+        {
+            Console.WriteLine("Would you like to retrieve another profile?  Type y for yes or anything else for no.");
+            string input = Console.ReadLine().ToLower();
+            if (input == "y")
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
 
         // method to request user Y or N for more student info retrieval.
         static bool AddAnotherStudentAsker()
@@ -270,10 +285,10 @@ namespace lab9_studentinfo_wclass_az
                     while (askforname)
                     {
                         Console.WriteLine("Which student would you like a profile for?");
-                        string choicer = Console.ReadLine().ToLower();
+                        string choicer = Console.ReadLine();
 
-                        var individualstudent = Students.Where(x => x.Name.ToLower() == choicer);
-                        if (Students.Exists(x => x.Name.ToLower() == choicer))
+                        var individualstudent = Students.Where(x => x.Name.ToLower() == choicer.ToLower());
+                        if (Students.Exists(x => x.Name.ToLower() == choicer.ToLower()))
                         {
                             foreach (var item in individualstudent)
                             {
@@ -290,6 +305,7 @@ namespace lab9_studentinfo_wclass_az
                         {
                             Console.WriteLine($"Student {choicer} doesn't exist.");
                         }
+                        RetrievingProfile = MoreProfilesAsker();
                     }
 
                 }
