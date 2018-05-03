@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Globalization;
 
 namespace lab9_studentinfo_wclass_az
 {
@@ -13,7 +14,10 @@ namespace lab9_studentinfo_wclass_az
          * prompts the user to retrieve, add, list or quit.
          * added support for more than 20 students.
          * uses LINQ for input validation to reject numbers for non-int data members.
-         * students can be listed in an alphabetical profile style order with "list" command. */
+         * students can be listed in an alphabetical profile style order with "list" command.
+         * added "profile" method, retrieves all info at once.
+         * 
+         * TODO: request user response for returning additional profiles while in method. */
 
     // a class for the student and their info.
     class Student
@@ -60,6 +64,7 @@ namespace lab9_studentinfo_wclass_az
                 Console.WriteLine("Type \"retrieve\" to retrieve information about a student.");
                 Console.WriteLine("Type \"add\" to add a student and their information.");
                 Console.WriteLine("Type \"list\" to the list the students in alphabetical order.");
+                Console.WriteLine("Type \"profile\" to view a student's profile.");
                 Console.WriteLine("Type \"quit\" to quit the program.");
 
                 //user's response
@@ -68,6 +73,7 @@ namespace lab9_studentinfo_wclass_az
                 if (RetrAddOrQuit != "retrieve" 
                     && RetrAddOrQuit != "add" 
                     && RetrAddOrQuit != "list"
+                    && RetrAddOrQuit != "profile"
                     && RetrAddOrQuit != "quit")
                 {
                     continue;
@@ -89,6 +95,13 @@ namespace lab9_studentinfo_wclass_az
                     Console.WriteLine("");
                     StudentsInAZOrder();
                 }
+                // user requests student profile
+                else if (RetrAddOrQuit == "profile")
+                {
+                    Console.WriteLine("");
+                    StudentProfiler();
+                }
+
                 // user wants to quit
                 else if (RetrAddOrQuit == "quit")
                 {
@@ -247,13 +260,48 @@ namespace lab9_studentinfo_wclass_az
             }
         }
 
+        // method for student profiler
+        static void StudentProfiler()         {
+            bool RetrievingProfile = true;
+            while (RetrievingProfile == true)
+            {
+                {
+                    bool askforname = true;
+                    while (askforname)
+                    {
+                        Console.WriteLine("Which student would you like a profile for?");
+                        string choicer = Console.ReadLine().ToLower();
+
+                        var individualstudent = Students.Where(x => x.Name.ToLower() == choicer);
+                        if (Students.Exists(x => x.Name.ToLower() == choicer))
+                        {
+                            foreach (var item in individualstudent)
+                            {
+                                Console.WriteLine($"Student Name: { item.Name}");
+                                Console.WriteLine($"Hometown: { item.Hometown}");
+                                Console.WriteLine($"Favorite Food: { item.FavFood}");
+                                Console.WriteLine($"Favorite Number: { item.FavNumber}");
+                                Console.WriteLine("");
+                            }
+                            askforname = false;
+                            RetrievingProfile = false;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Student {choicer} doesn't exist.");
+                        }
+                    }
+
+                }
+            }
+        } 
         //method for retrieving student info
         static void StudentRetriever()
         {
             bool RetrievingInfo = true;
             while (RetrievingInfo == true)
             {
-                Console.WriteLine($"Enter a student number up to-{Students.Count}");
+                Console.WriteLine($"Enter a student number up to {Students.Count}");
                 string userchoice;
                 userchoice = Console.ReadLine();
                 int studentnum;
